@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  password  String
+  avatar    String?
+  aiProvider    String?
+  aiModel       String?
+  aiApiKey      String?
+  aiBaseUrl     String?
+  imageProvider String?
+  imageModel    String?
+  imageApiKey   String?
+  imageBaseUrl  String?
+  tomatoCookies Json?
+  tomatoAuthorName String?
+  tomatoAuthorAvatar String?
+  tomatoBoundAt DateTime?
+  tomatoBookId String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[]
+  sessions  Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id              String           @id @default(cuid())
+  title           String
+  genre           String
+  description     String?
+  coverImage      String?
+  status          String           @default("draft")
+  aiProvider      String           @default("openai") // openai or anthropic
+  aiModel         String?          // 自定义模型名称
+  aiApiKey        String?          // 项目专用 API Key
+  aiBaseUrl       String?          // 自定义 API Base URL
+  imageProvider   String           @default("openai") // 图像模型提供商
+  imageModel      String?          // 图像模型名称
+  imageApiKey     String?          // 图像模型专用 API Key
+  imageBaseUrl    String?          // 图像模型 Base URL
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  settings        ProjectSettings?
+  characters      Character[]
+  outline         Outline?
+  chapters        Chapter[]
+}
+
+model ProjectSettings {
+  id           String   @id @default(cuid())
+  projectId    String   @unique
+  worldView    String   @db.Text
+  coreConflict String   @db.Text
+  powerSystem  String?  @db.Text
+  factions     Json?
+  specialRules Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Character {
+  id            String   @id @default(cuid())
+  projectId     String
+  name          String
+  role          String
+  age           Int?
+  gender        String?
+  imageUrl      String?
+  appearance    String?  @db.Text
+  personality   String[]
+  background    String   @db.Text
+  motivation    String?  @db.Text
+  strengths     String[]
+  weaknesses    String[]
+  relationships Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Outline {
+  id         String        @id @default(cuid())
+  projectId  String        @unique
+  structure  Json
+  plotPoints Json
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  project    Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items      OutlineItem[]
+}
+
+model OutlineItem {
+  id            String    @id @default(cuid())
+  outlineId     String
+  chapterNumber Int
+  title         String
+  summary       String    @db.Text
+  keyEvents     String[]
+  characters    String[]
+  order         Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  outline       Outline   @relation(fields: [outlineId], references: [id], onDelete: Cascade)
+  chapters      Chapter[]
+}
+
+model Chapter {
+  id             String           @id @default(cuid())
+  projectId      String
+  outlineItemId  String?
+  chapterNumber  Int
+  title          String
+  content        String           @db.Text
+  summary        String?          @db.Text // AI 生成的章节摘要，用于上下文传递
+  wordCount      Int              @default(0)
+  status         String           @default("draft")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  project        Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  outlineItem    OutlineItem?     @relation(fields: [outlineItemId], references: [id], onDelete: SetNull)
+  versions       ChapterVersion[]
+}
+
+model ChapterVersion {
+  id        String   @id @default(cuid())
+  chapterId String
+  content   String   @db.Text
+  wordCount Int
+  note      String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+model SceneImage {
+  id        String   @id @default(cuid())
+  projectId String
+  sceneName String
+  imageUrl  String
+  prompt    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, sceneName])
+  @@index([projectId])
+}
+

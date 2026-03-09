@@ -1,0 +1,133 @@
+# 依赖
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 构建输出
+dist/
+build/
+release/
+out/
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志文件
+*.log
+
+# 运行时数据
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# 缓存目录
+.npm/
+.eslintcache
+.cache/
+.parcel-cache/
+
+# 临时文件
+.tmp/
+temp/
+*.tmp
+*.temp
+
+# 操作系统
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 编辑器 (保留团队共享配置)
+.vscode/settings.json
+!.vscode/sync-settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/README.md
+.idea/
+*.swp
+*.swo
+*~
+
+# TypeScript
+*.tsbuildinfo
+
+# 测试覆盖率
+coverage/
+*.lcov
+
+# Electron
+app/node_modules/
+app/dist/
+app/*.js
+app/package-lock.json
+app/logs/**
+app-builds/
+
+# 本地配置
+local.json
+config.local.json
+
+# 备份文件
+*.bak
+*.backup
+
+# 锁定文件（根据团队协议选择保留哪个）
+# package-lock.json
+# yarn.lock
+
+# 用户特定文件
+.cursor/
+cursor.json
+
+# 调试文件
+chrome-debug.log
+vscode-debug.log
+
+# 本地数据库
+*.db
+*.sqlite
+
+# 证书和密钥
+*.pem
+*.key
+*.cert
+
+# 打包文件
+*.zip
+*.tar.gz
+*.rar
+
+# AI 工具链（本地配置，不入库）
+.claude/settings.json
+.trellis/
+AGENTS.md
+
+# 测试报告 / E2E 产物
+e2e-report/
+
+# 项目特定忽略
+# models/ 官方模型文件已纳入版本管理
+textures/
+assets/large/
+
+.roo
+docs/**/examples
+
+.claude.json
+.claude/settings.local.json
+
+logs
+
+data/tomato

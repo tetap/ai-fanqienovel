@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: novel-ai-db
+    restart: unless-stopped
+    ports:
+      - "6432:5432"
+    environment:
+      POSTGRES_USER: novel_user
+      POSTGRES_PASSWORD: novel_password
+      POSTGRES_DB: novel_ai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U novel_user -d novel_ai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
