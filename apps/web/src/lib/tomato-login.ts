@@ -68,7 +68,7 @@ async function resolveChromeExecutablePath(): Promise<string | undefined> {
 async function createLaunchOptions() {
   const executablePath = await resolveChromeExecutablePath();
   return {
-    headless: false as const,
+    headless: true as const,
     ignoreDefaultArgs: ["--enable-automation"],
     args: [
       "--no-sandbox",
